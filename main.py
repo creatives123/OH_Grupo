@@ -38,7 +38,7 @@ procedimentos = {
 # Função para calcular o "score" dos enfermeiros para cada procedimento
 def calcular_score(tempos, categoria):
     if categoria in [2, 3]:
-        return [tempo * 1.5 if tempo != 999 else 999 for tempo in tempos]
+        return [tempo * 1.25 if tempo != 999 else 999 for tempo in tempos]
     return tempos
 
 # Função para obter os três melhores enfermeiros para um procedimento
@@ -82,7 +82,7 @@ for periodo in range(1, 8):
 
 # Verificar se a duração total ultrapassa as 8 horas
 if duracao_total > 480:
-    print("A duração total do dia de trabalho ultrapassa 8 horas. Ajustes necessários.")
+    print("A duração total do dia de trabalho ultrapassa 8 horas. Ajustes necessários.", duracao_total)
 else:
     print("Solução admissível encontrada. Duração total:", duracao_total, "minutos")
 
@@ -96,14 +96,14 @@ for e, aloc in alocacoes.items():
             'tempo': proc['tempo']
         })
 
-# Exibir as alocações organizadas por períodos e tempos de cada procedimento
-print("\nAlocações por períodos:")
-for periodo, alocacoes in alocacoes_por_periodo.items():
-    print(f"Período {periodo}:")
-    for aloc in alocacoes:
-        print(f"  - Enfermeiro: {aloc['enfermeiro']}, Procedimento: {aloc['procedimento']}, Tempo: {aloc['tempo']} minutos")
-    print(f"Duração do Período: {duracoes_periodos[periodo - 1]} minutos")
-
-print("\nTempos de cada procedimento:")
-for p, tempo in tempos_procedimentos_max.items():
-    print(f"Procedimento {p}: {tempo} minutos")
+# Escrever as alocações organizadas por períodos e tempos de cada procedimento em um arquivo txt
+with open('alocacoes.txt', 'w') as f:
+    f.write("Alocações por períodos:\n")
+    for periodo, alocacoes in alocacoes_por_periodo.items():
+        f.write(f"Período {periodo}:\n")
+        for aloc in alocacoes:
+            f.write(f"  - Enfermeiro: {aloc['enfermeiro']}, Procedimento: {aloc['procedimento']}, Tempo: {aloc['tempo']} minutos\n")
+        f.write(f"Duração do Período: {duracoes_periodos[periodo - 1]} minutos\n")
+    f.write("\nTempos de cada procedimento:\n")
+    for p, tempo in tempos_procedimentos_max.items():
+        f.write(f"Procedimento {p}: {tempo} minutos\n")

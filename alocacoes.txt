@@ -1,0 +1,72 @@
+Alocações por períodos:
+Período 1:
+  - Enfermeiro: E1, Procedimento: P2, Tempo: 79 minutos
+  - Enfermeiro: E3, Procedimento: P1, Tempo: 48 minutos
+  - Enfermeiro: E4, Procedimento: P1, Tempo: 56 minutos
+  - Enfermeiro: E6, Procedimento: P1, Tempo: 51 minutos
+  - Enfermeiro: E7, Procedimento: P2, Tempo: 54 minutos
+  - Enfermeiro: E9, Procedimento: P2, Tempo: 63 minutos
+Duração do Período: 79 minutos
+Período 2:
+  - Enfermeiro: E2, Procedimento: P4, Tempo: 63 minutos
+  - Enfermeiro: E3, Procedimento: P4, Tempo: 70 minutos
+  - Enfermeiro: E4, Procedimento: P4, Tempo: 55 minutos
+  - Enfermeiro: E6, Procedimento: P3, Tempo: 63 minutos
+  - Enfermeiro: E8, Procedimento: P3, Tempo: 54 minutos
+  - Enfermeiro: E10, Procedimento: P3, Tempo: 56 minutos
+Duração do Período: 70 minutos
+Período 3:
+  - Enfermeiro: E5, Procedimento: P5, Tempo: 50 minutos
+  - Enfermeiro: E6, Procedimento: P6, Tempo: 90 minutos
+  - Enfermeiro: E7, Procedimento: P6, Tempo: 87 minutos
+  - Enfermeiro: E8, Procedimento: P5, Tempo: 66 minutos
+  - Enfermeiro: E9, Procedimento: P5, Tempo: 72 minutos
+  - Enfermeiro: E10, Procedimento: P6, Tempo: 80 minutos
+Duração do Período: 90 minutos
+Período 4:
+  - Enfermeiro: E5, Procedimento: P7, Tempo: 61 minutos
+  - Enfermeiro: E6, Procedimento: P8, Tempo: 71 minutos
+  - Enfermeiro: E7, Procedimento: P7, Tempo: 65 minutos
+  - Enfermeiro: E8, Procedimento: P7, Tempo: 63 minutos
+  - Enfermeiro: E9, Procedimento: P8, Tempo: 85 minutos
+  - Enfermeiro: E10, Procedimento: P8, Tempo: 65 minutos
+Duração do Período: 85 minutos
+Período 5:
+  - Enfermeiro: E1, Procedimento: P9, Tempo: 52 minutos
+  - Enfermeiro: E2, Procedimento: P9, Tempo: 70 minutos
+  - Enfermeiro: E3, Procedimento: P9, Tempo: 62 minutos
+  - Enfermeiro: E5, Procedimento: P10, Tempo: 70 minutos
+  - Enfermeiro: E6, Procedimento: P10, Tempo: 68 minutos
+  - Enfermeiro: E7, Procedimento: P10, Tempo: 70 minutos
+Duração do Período: 70 minutos
+Período 6:
+  - Enfermeiro: E2, Procedimento: P11, Tempo: 74 minutos
+  - Enfermeiro: E3, Procedimento: P11, Tempo: 67 minutos
+  - Enfermeiro: E5, Procedimento: P12, Tempo: 60 minutos
+  - Enfermeiro: E8, Procedimento: P12, Tempo: 60 minutos
+  - Enfermeiro: E9, Procedimento: P12, Tempo: 66 minutos
+  - Enfermeiro: E10, Procedimento: P11, Tempo: 55 minutos
+Duração do Período: 74 minutos
+Período 7:
+  - Enfermeiro: E5, Procedimento: P14, Tempo: 86 minutos
+  - Enfermeiro: E7, Procedimento: P13, Tempo: 46 minutos
+  - Enfermeiro: E8, Procedimento: P13, Tempo: 45 minutos
+  - Enfermeiro: E9, Procedimento: P13, Tempo: 51 minutos
+  - Enfermeiro: E10, Procedimento: P14, Tempo: 73 minutos
+Duração do Período: 86 minutos
+
+Tempos de cada procedimento:
+Procedimento P1: 56 minutos
+Procedimento P2: 79 minutos
+Procedimento P3: 63 minutos
+Procedimento P4: 70 minutos
+Procedimento P5: 72 minutos
+Procedimento P6: 90 minutos
+Procedimento P7: 65 minutos
+Procedimento P8: 85 minutos
+Procedimento P9: 70 minutos
+Procedimento P10: 70 minutos
+Procedimento P11: 74 minutos
+Procedimento P12: 66 minutos
+Procedimento P13: 51 minutos
+Procedimento P14: 86 minutos
