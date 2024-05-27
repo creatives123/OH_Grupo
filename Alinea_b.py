@@ -42,25 +42,27 @@ def calcular_score(tempos, categoria):
     return tempos
 
 # Função para obter os três melhores enfermeiros para um procedimento
-def obter_melhores_enfermeiros(procedimento, periodo, alocacoes):
+def obter_melhores_enfermeiros(procedimento, periodo, alocacoes, index):
     candidatos = []
     for e, tempos in tempos_procedimentos.items():
         if categorias[e] == 1 and procedimento['tipo'] == 'complexo':
             continue
         if len(alocacoes[e]) < 5 and all(p['periodo'] != periodo for p in alocacoes[e]):
             score = calcular_score(tempos, categorias[e])
-            candidatos.append((e, score[procedimento['periodo'] - 1], tempos[procedimento['periodo'] - 1]))
+            candidatos.append((e, score[index], tempos[index]))
     candidatos.sort(key=lambda x: x[1])
     return [c for c in candidatos[:3] if c[1] != 999]
 
 # Inicializar alocações
 alocacoes = {e: [] for e in tempos_procedimentos}
 duracao_total = 0
+index = 0
 
 # Alocar enfermeiros aos procedimentos
 for p, dados_p in procedimentos.items():
     periodo = dados_p['periodo']
-    melhores = obter_melhores_enfermeiros(dados_p, periodo, alocacoes)
+    melhores = obter_melhores_enfermeiros(dados_p, periodo, alocacoes, index)
+    index = index + 1    
     for e, _, tempo in melhores:
         alocacoes[e].append({'procedimento': p, 'periodo': periodo, 'tempo': tempo})
 
@@ -96,14 +98,28 @@ for e, aloc in alocacoes.items():
             'tempo': proc['tempo']
         })
 
+# Função auxiliar para contar e mostrar a quantidade de procedimentos de cada enfermeiro
+def contar_procedimentos(alocacoes):
+    contagem_procedimentos = {e: len(aloc) for e, aloc in alocacoes.items()}
+    print("Quantidade de procedimentos por enfermeiro:")
+    for e, quantidade in contagem_procedimentos.items():
+        print(f"{e}: {quantidade} procedimentos")
+
+# Contar e mostrar a quantidade de procedimentos de cada enfermeiro
+contar_procedimentos(alocacoes)
+
 # Escrever as alocações organizadas por períodos e tempos de cada procedimento em um arquivo txt
 with open('alocacoes.txt', 'w') as f:
     f.write("Alocações por períodos:\n")
-    for periodo, alocacoes in alocacoes_por_periodo.items():
+    for periodo, alocacoes_periodo in alocacoes_por_periodo.items():
         f.write(f"Período {periodo}:\n")
-        for aloc in alocacoes:
+        for aloc in alocacoes_periodo:
             f.write(f"  - Enfermeiro: {aloc['enfermeiro']}, Procedimento: {aloc['procedimento']}, Tempo: {aloc['tempo']} minutos\n")
         f.write(f"Duração do Período: {duracoes_periodos[periodo - 1]} minutos\n")
     f.write("\nTempos de cada procedimento:\n")
     for p, tempo in tempos_procedimentos_max.items():
         f.write(f"Procedimento {p}: {tempo} minutos\n")
+    f.write("\nQuantidade de procedimentos por enfermeiro:\n")
+    contagem_procedimentos = {e: len(aloc) for e, aloc in alocacoes.items()}
+    for e, quantidade in contagem_procedimentos.items():
+        f.write(f"{e}: {quantidade} procedimentos\n")
