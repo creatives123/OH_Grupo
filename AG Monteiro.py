@@ -81,17 +81,14 @@ def one_point_crossover(parent1, parent2):
     return child1, child2
 
 def two_point_crossover(parent1, parent2):
-    # Ensure at least two distinct points for crossover
     point1 = random.randint(1, len(parent1) - 1)
     point2 = random.randint(1, len(parent1) - 1)
     while point1 == point2:
         point2 = random.randint(1, len(parent1) - 1)
     
-    # Make sure point1 is before point2
     if point1 > point2:
         point1, point2 = point2, point1
     
-    # Create child chromosomes by swapping genetic material between the two points
     child1 = parent1[:point1] + parent2[point1:point2] + parent1[point2:]
     child2 = parent2[:point1] + parent1[point1:point2] + parent2[point2:]
     
