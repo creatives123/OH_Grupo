@@ -193,14 +193,14 @@ print('Melhor solução encontrada:')
 print(best_solution)
 print(f'Melhor Fitness: {best_fitness}, Duração Total: {best_duration}')
 
-# Plotar gráfico com valores absolutos
-best_fitness_over_generations_abs = [abs(fitness) for fitness in best_fitness_over_generations]
-plt.plot(range(len(best_fitness_over_generations_abs)), best_fitness_over_generations_abs)
-plt.xlabel('Gerações')
-plt.ylabel('Melhor Fitness (Valores Absolutos)')
-plt.ylim(425, 500)
-plt.title('Evolução do Fitness ao Longo das Gerações (Valores Absolutos)')
-plt.show()
+# # Plotar gráfico com valores absolutos
+# best_fitness_over_generations_abs = [abs(fitness) for fitness in best_fitness_over_generations]
+# plt.plot(range(len(best_fitness_over_generations_abs)), best_fitness_over_generations_abs)
+# plt.xlabel('Gerações')
+# plt.ylabel('Melhor Fitness (Valores Absolutos)')
+# plt.ylim(425, 500)
+# plt.title('Evolução do Fitness ao Longo das Gerações (Valores Absolutos)')
+# plt.show()
 
 # Plotar gráfico com a evolução da duração total
 plt.plot(range(len(best_duration_over_generations)), best_duration_over_generations)
