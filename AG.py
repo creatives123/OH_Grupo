@@ -8,8 +8,9 @@ df = pd.read_excel(file_path)
 
 NUM_PROCEDURES = 14
 NUM_NURSES = 10
+MAX_NURSES_PER_PROCEDURE = 3
 POPULATION_SIZE = 50
-GENERATIONS = 500
+GENERATIONS = 3000
 MUTATION_RATE = 0.1
 
 # Categorias dos enfermeiros
@@ -34,6 +35,8 @@ def evaluate_fitness(cromossoma):
     # Period pairs as given in the assignment
     period_pairs = [(0, 1), (2, 3), (4, 5), (6, 7), (8, 9), (10, 11), (12, 13)]
     
+    max_times = [[df.iloc[i, enfermeiro] for enfermeiro in procedimento] for i, procedimento in enumerate(cromossoma)]
+
     for p1, p2 in period_pairs:
         procedimento1 = cromossoma[p1]
         procedimento2 = cromossoma[p2]
@@ -41,11 +44,8 @@ def evaluate_fitness(cromossoma):
         if len(set(procedimento1 + procedimento2)) != 6:
             fitness += 1000  # Penalidade alta para enfermeiros repetidos no mesmo período
         
-        times1 = [df.iloc[p1, enfermeiro] for enfermeiro in procedimento1]
-        times2 = [df.iloc[p2, enfermeiro] for enfermeiro in procedimento2]
-        
-        duration1 = max(times1)
-        duration2 = max(times2)
+        duration1 = max(max_times[p1])
+        duration2 = max(max_times[p2])
         
         period_duration = max(duration1, duration2)
         total_duration += period_duration
@@ -109,7 +109,7 @@ def mutate(cromossoma, mutation_rate, mutation_type='bit_flip'):
 # Mutação Bit Flip - Muda um enfermeiro aleatório da Tupla
 def bit_flip_mutation(procedure):
     enfermeiros = list(procedure)
-    enfermeiro_idx = random.randint(0, 2)  # Escolhe aleatoriamente um dos três enfermeiros
+    enfermeiro_idx = random.randint(0, MAX_NURSES_PER_PROCEDURE - 1)  # Escolhe aleatoriamente um dos três enfermeiros
     while True:
         new_enfermeiro = random.randint(0, NUM_NURSES - 1)
         if new_enfermeiro != enfermeiros[enfermeiro_idx]:
@@ -157,14 +157,14 @@ def initialize_population(size):
     return population
 
 # Atualização da população
-def evolve_population(population, mutation_rate):
+def evolve_population(population):
     new_population = []
     for _ in range(len(population) // 2):
         parent1 = tournament_selection(population)
         parent2 = tournament_selection(population)
         child1, child2 = multi_point_crossover(parent1, parent2)
-        child1 = mutate(child1, mutation_rate)
-        child2 = mutate(child2, mutation_rate)
+        child1 = mutate(child1, MUTATION_RATE)
+        child2 = mutate(child2, MUTATION_RATE)
         new_population.extend([child1, child2])
     return new_population
 
@@ -179,7 +179,7 @@ def genetic_algorithm():
     global_best_solution = None
 
     for generation in range(GENERATIONS):
-        population = evolve_population(population, MUTATION_RATE)
+        population = evolve_population(population)
         for individual in population:
             fitness, duration = evaluate_fitness(individual)
             if fitness > global_best_fitness:
@@ -211,10 +211,10 @@ print(f'Melhor Fitness: {best_fitness}, Duração Total: {best_duration}')
 # plt.show()
 
 # Plotar gráfico com a evolução da duração total
-plt.plot(range(len(best_duration_over_generations)), best_duration_over_generations)
-plt.xlabel('Gerações')
-plt.axhline(y=480, color='r', linestyle='--', label='Linha Horizontal em y=480')  # Adicionar linha horizontal
-plt.ylabel('Duração Total')
-plt.ylim(435, 520)
-plt.title('Evolução da Duração Total ao Longo das Gerações')
-plt.show()
+# plt.plot(range(len(best_duration_over_generations)), best_duration_over_generations)
+# plt.xlabel('Gerações')
+# plt.axhline(y=480, color='r', linestyle='--', label='Linha Horizontal em y=480')  # Adicionar linha horizontal
+# plt.ylabel('Duração Total')
+# plt.ylim(435, 520)
+# plt.title('Evolução da Duração Total ao Longo das Gerações')
+# plt.show()
