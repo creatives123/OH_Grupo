@@ -39,7 +39,7 @@ def evaluate_fitness(cromossoma):
         procedimento2 = cromossoma[p2]
         
         if len(set(procedimento1 + procedimento2)) != 6:
-            fitness += 500  # Penalidade alta para enfermeiros repetidos no mesmo período
+            fitness += 1000  # Penalidade alta para enfermeiros repetidos no mesmo período
         
         times1 = [df.iloc[p1, enfermeiro] for enfermeiro in procedimento1]
         times2 = [df.iloc[p2, enfermeiro] for enfermeiro in procedimento2]
@@ -60,9 +60,9 @@ def evaluate_fitness(cromossoma):
         
         # Penalizar uso de enfermeiros da categoria 1 em procedimentos restritos
         if p1 in procedimentos_restritos and any(enfermeiro in enfermeiros_categoria_1 for enfermeiro in procedimento1):
-            fitness += 500  # Penalidade alta
+            fitness += 1000  # Penalidade alta
         if p2 in procedimentos_restritos and any(enfermeiro in enfermeiros_categoria_1 for enfermeiro in procedimento2):
-            fitness += 500  # Penalidade alta
+            fitness += 1000  # Penalidade alta
                 
     return -fitness, total_duration  # Queremos minimizar a duração total com penalidades
 
@@ -74,7 +74,7 @@ def tournament_selection(population, k=6):
     return selected[0]
 
 # Operador de crossover de K pontos
-def multi_point_crossover(parent1, parent2, num_points=6):
+def multi_point_crossover(parent1, parent2, num_points=5):
     # Garante que não haja duplicação de pontos de crossover
     points = sorted(random.sample(range(1, len(parent1)), num_points))
     
@@ -99,6 +99,8 @@ def mutate(cromossoma, mutation_rate, mutation_type='bit_flip'):
                 cromossoma[i] = bit_flip_mutation(cromossoma[i])
             elif mutation_type == 'swap':
                 cromossoma = swap_mutation(cromossoma)
+            elif mutation_type == 'inversion':
+                cromossoma = inversion_mutation(cromossoma)
     return cromossoma
 
 # Mutação Bit Flip
@@ -122,21 +124,22 @@ def inversion_mutation(cromossoma):
     cromossoma[idx1:idx2] = reversed(cromossoma[idx1:idx2])
     return cromossoma
 
+# # Gera um procedimento válido considerando as restrições
+# def generate_valid_procedure(procedure_index):
+#     while True:
+#         enfermeiros = (random.randint(0, NUM_NURSES-1), random.randint(0, NUM_NURSES-1), random.randint(0, NUM_NURSES-1))
+#         if (procedure_index in procedimentos_restritos and all(enfermeiro not in enfermeiros_categoria_1 for enfermeiro in enfermeiros)) or (procedure_index not in procedimentos_restritos):
+#             return enfermeiros
 
-# Gera um procedimento válido considerando as restrições
-def generate_valid_procedure(procedure_index):
-    while True:
-        enfermeiros = (random.randint(0, NUM_NURSES-1), random.randint(0, NUM_NURSES-1), random.randint(0, NUM_NURSES-1))
-        if (procedure_index in procedimentos_restritos and all(enfermeiro not in enfermeiros_categoria_1 for enfermeiro in enfermeiros)) or (procedure_index not in procedimentos_restritos):
-            return enfermeiros
 
-# Inicializar a população
+# Inicializar a população aleatória
 def initialize_population(size):
     population = []
     for _ in range(size):
-        individual = [generate_valid_procedure(i) for i in range(NUM_PROCEDURES)]
+        individual = [(random.randint(0, NUM_NURSES-1), random.randint(0, NUM_NURSES-1), random.randint(0, NUM_NURSES-1)) for _ in range(NUM_PROCEDURES)]
         population.append(individual)
     return population
+
 
 # Atualização da população
 def evolve_population(population, mutation_rate):
