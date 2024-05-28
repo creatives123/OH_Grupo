@@ -173,17 +173,25 @@ def genetic_algorithm():
     best_fitness_over_generations = []
     best_duration_over_generations = []
 
+    # Inicializar as variáveis para a melhor solução global
+    global_best_fitness = float('-inf')
+    global_best_duration = None
+    global_best_solution = None
+
     for generation in range(GENERATIONS):
         population = evolve_population(population, MUTATION_RATE)
-        best_fitness, best_duration = max((evaluate_fitness(individual) for individual in population), key=lambda x: x[0])
-        best_fitness_over_generations.append(best_fitness)
-        best_duration_over_generations.append(best_duration)
-        print(f'Geração {generation}: Melhor Fitness = {best_fitness}, Duração = {best_duration}')
+        for individual in population:
+            fitness, duration = evaluate_fitness(individual)
+            if fitness > global_best_fitness:
+                global_best_fitness = fitness
+                global_best_duration = duration
+                global_best_solution = individual
+        
+        best_fitness_over_generations.append(global_best_fitness)
+        best_duration_over_generations.append(global_best_duration)
+        print(f'Geração {generation}: Melhor Fitness = {global_best_fitness}, Duração = {global_best_duration}')
 
-    best_solution = max(population, key=lambda x: evaluate_fitness(x)[0])
-    best_fitness, best_duration = evaluate_fitness(best_solution)
-
-    return best_solution, best_fitness, best_duration, best_fitness_over_generations, best_duration_over_generations
+    return global_best_solution, global_best_fitness, global_best_duration, best_fitness_over_generations, best_duration_over_generations
 
 # Executar o algoritmo genético
 best_solution, best_fitness, best_duration, best_fitness_over_generations, best_duration_over_generations = genetic_algorithm()
