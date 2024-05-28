@@ -56,14 +56,17 @@ def evaluate_fitness(cromossoma):
             
             # Penalizar enfermeiro que participa mais de 5 vezes
             if enfermeiro_count[enfermeiro] > 5:
-                fitness += 500  # Penalidade alta
+                fitness += 250  # Penalidade alta
         
         # Penalizar uso de enfermeiros da categoria 1 em procedimentos restritos
         if p1 in procedimentos_restritos and any(enfermeiro in enfermeiros_categoria_1 for enfermeiro in procedimento1):
             fitness += 1000  # Penalidade alta
         if p2 in procedimentos_restritos and any(enfermeiro in enfermeiros_categoria_1 for enfermeiro in procedimento2):
             fitness += 1000  # Penalidade alta
-                
+    
+    if fitness < 460:
+        fitness -=200            
+    
     return -fitness, total_duration  # Queremos minimizar a duração total com penalidades
 
 
@@ -103,7 +106,7 @@ def mutate(cromossoma, mutation_rate, mutation_type='bit_flip'):
                 cromossoma = inversion_mutation(cromossoma)
     return cromossoma
 
-# Mutação Bit Flip
+# Mutação Bit Flip - Muda um enfermeiro aleatório da Tupla
 def bit_flip_mutation(procedure):
     enfermeiros = list(procedure)
     enfermeiro_idx = random.randint(0, 2)  # Escolhe aleatoriamente um dos três enfermeiros
@@ -113,6 +116,20 @@ def bit_flip_mutation(procedure):
             enfermeiros[enfermeiro_idx] = new_enfermeiro
             break
     return tuple(enfermeiros)
+
+# Mutação Bit Flip - Pode mudar entre 1 e 3 enfermeiros da Tupla.
+# def bit_flip_mutation(procedure):
+#     enfermeiros = list(procedure)
+#     num_mutations = random.randint(1, 3)  # Número aleatório de mutações entre 1 e 3
+#     indices_to_mutate = random.sample(range(len(enfermeiros)), num_mutations)
+#     for enfermeiro_idx in indices_to_mutate:
+#         while True:
+#             new_enfermeiro = random.randint(0, NUM_NURSES - 1)
+#             if new_enfermeiro != enfermeiros[enfermeiro_idx]:
+#                 enfermeiros[enfermeiro_idx] = new_enfermeiro
+#                 break
+#     return tuple(enfermeiros)
+
 
 def swap_mutation(cromossoma):
     idx1, idx2 = random.sample(range(len(cromossoma)), 2)
@@ -131,7 +148,6 @@ def inversion_mutation(cromossoma):
 #         if (procedure_index in procedimentos_restritos and all(enfermeiro not in enfermeiros_categoria_1 for enfermeiro in enfermeiros)) or (procedure_index not in procedimentos_restritos):
 #             return enfermeiros
 
-
 # Inicializar a população aleatória
 def initialize_population(size):
     population = []
@@ -139,7 +155,6 @@ def initialize_population(size):
         individual = [(random.randint(0, NUM_NURSES-1), random.randint(0, NUM_NURSES-1), random.randint(0, NUM_NURSES-1)) for _ in range(NUM_PROCEDURES)]
         population.append(individual)
     return population
-
 
 # Atualização da população
 def evolve_population(population, mutation_rate):
@@ -153,24 +168,25 @@ def evolve_population(population, mutation_rate):
         new_population.extend([child1, child2])
     return new_population
 
-# Função principal do algoritmo genético
 def genetic_algorithm():
     population = initialize_population(POPULATION_SIZE - 1)
     best_fitness_over_generations = []
+    best_duration_over_generations = []
 
     for generation in range(GENERATIONS):
         population = evolve_population(population, MUTATION_RATE)
         best_fitness, best_duration = max((evaluate_fitness(individual) for individual in population), key=lambda x: x[0])
         best_fitness_over_generations.append(best_fitness)
+        best_duration_over_generations.append(best_duration)
         print(f'Geração {generation}: Melhor Fitness = {best_fitness}, Duração = {best_duration}')
 
     best_solution = max(population, key=lambda x: evaluate_fitness(x)[0])
     best_fitness, best_duration = evaluate_fitness(best_solution)
 
-    return best_solution, best_fitness, best_duration, best_fitness_over_generations
+    return best_solution, best_fitness, best_duration, best_fitness_over_generations, best_duration_over_generations
 
 # Executar o algoritmo genético
-best_solution, best_fitness, best_duration, best_fitness_over_generations = genetic_algorithm()
+best_solution, best_fitness, best_duration, best_fitness_over_generations, best_duration_over_generations = genetic_algorithm()
 
 # Imprimir a melhor solução encontrada
 print('Melhor solução encontrada:')
@@ -184,4 +200,13 @@ plt.xlabel('Gerações')
 plt.ylabel('Melhor Fitness (Valores Absolutos)')
 plt.ylim(425, 500)
 plt.title('Evolução do Fitness ao Longo das Gerações (Valores Absolutos)')
+plt.show()
+
+# Plotar gráfico com a evolução da duração total
+plt.plot(range(len(best_duration_over_generations)), best_duration_over_generations)
+plt.xlabel('Gerações')
+plt.axhline(y=480, color='r', linestyle='--', label='Linha Horizontal em y=480')  # Adicionar linha horizontal
+plt.ylabel('Duração Total')
+plt.ylim(435, 520)
+plt.title('Evolução da Duração Total ao Longo das Gerações')
 plt.show()
