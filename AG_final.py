@@ -14,6 +14,7 @@ GENERATIONS = 3000
 CROSSOVER_TYPE = 'multi-point'  # multi-point, uniform
 CROSSOVER_POINT_K = 5
 SELECTION_TYPE = 'tournament'  # tournament, fitness-proportional, rank, random
+TOURNAMENT_K = 6
 MUTATION_TYPE = 'random_reseting'  # 'random_reseting', 'swap', 'inversion'
 MUTATION_RATE = 0.1
 
@@ -204,8 +205,8 @@ def evolve_population(population):
         # Selecionar os pais conforme o método de seleção
         match SELECTION_TYPE:
             case 'tournament':
-                parent1 = tournament_selection(population)
-                parent2 = tournament_selection(population)
+                parent1 = tournament_selection(population, TOURNAMENT_K)
+                parent2 = tournament_selection(population, TOURNAMENT_K)
             case 'fitness-proportional':
                 parent1 = fitness_proportional_selection(population)
                 parent2 = fitness_proportional_selection(population)
