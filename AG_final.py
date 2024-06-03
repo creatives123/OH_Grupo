@@ -14,7 +14,7 @@ GENERATIONS = 3000
 CROSSOVER_TYPE = 'multi-point'  # multi-point, uniform
 CROSSOVER_POINT_K = 5
 SELECTION_TYPE = 'tournament'  # tournament, fitness-proportional, rank, random
-MUTATION_TYPE = 'bit_flip'  # 'bit_flip', 'swap', 'inversion'
+MUTATION_TYPE = 'random_reseting'  # 'random_reseting', 'swap', 'inversion'
 MUTATION_RATE = 0.1
 
 
@@ -38,7 +38,7 @@ def evaluate_fitness(cromossoma):
     enfermeiro_count = [0] * NUM_NURSES
     total_duration = 0
 
-    # Period pairs as given in the assignment
+    # Pares de períodos conforme a restrição do enunciado
     period_pairs = [(0, 1), (2, 3), (4, 5), (6, 7), (8, 9), (10, 11), (12, 13)]
 
     max_times = [[df.iloc[i, enfermeiro] for enfermeiro in procedimento] for i, procedimento in enumerate(cromossoma)]
@@ -144,12 +144,11 @@ def uniform_crossover(parent1, parent2):
     return child1, child2
 
 
-# Operador de mutação (Bit Flip)
 def mutate(cromossoma, mutation_rate):
     for i in range(len(cromossoma)):
         if random.random() < mutation_rate:
-            if MUTATION_TYPE == 'bit_flip':
-                cromossoma[i] = bit_flip_mutation(cromossoma[i])
+            if MUTATION_TYPE == 'random_reseting':
+                cromossoma[i] = random_resetting_mutation(cromossoma[i])
             elif MUTATION_TYPE == 'swap':
                 cromossoma = swap_mutation(cromossoma)
             elif MUTATION_TYPE == 'inversion':
@@ -157,8 +156,8 @@ def mutate(cromossoma, mutation_rate):
     return cromossoma
 
 
-# Mutação Bit Flip - Muda um enfermeiro aleatório da Tupla
-def bit_flip_mutation(procedure):
+# Mutação Resetting Aleatória - Muda um enfermeiro aleatório da Tupla
+def random_resetting_mutation(procedure):
     enfermeiros = list(procedure)
     enfermeiro_idx = random.randint(0, MAX_NURSES_PER_PROCEDURE - 1)  # Escolhe aleatoriamente um dos três enfermeiros
     while True:
