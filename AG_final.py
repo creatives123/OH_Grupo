@@ -15,7 +15,7 @@ CROSSOVER_TYPE = 'multi-point'  # multi-point, uniform
 CROSSOVER_POINT_K = 5
 SELECTION_TYPE = 'tournament'  # tournament, fitness-proportional, rank, random
 TOURNAMENT_K = 6
-MUTATION_TYPE = 'random_reseting'  # 'random_reseting', 'swap', 'inversion'
+MUTATION_TYPE = 'random_reseting'  # 'random_reseting', 'swap'
 MUTATION_RATE = 0.1
 
 
@@ -152,8 +152,6 @@ def mutate(cromossoma, mutation_rate):
                 cromossoma[i] = random_resetting_mutation(cromossoma[i])
             elif MUTATION_TYPE == 'swap':
                 cromossoma = swap_mutation(cromossoma)
-            elif MUTATION_TYPE == 'inversion':
-                cromossoma = inversion_mutation(cromossoma)
     return cromossoma
 
 
@@ -169,17 +167,18 @@ def random_resetting_mutation(procedure):
     return tuple(enfermeiros)
 
 
-# Mutação Swap - Troca dois enfermeiros aleatórios
+# Mutação Swap - Troca dois enfermeiros aleatórios em posições diferentes do cromossoma
 def swap_mutation(cromossoma):
+    # Seleciona duas tuplas aleatórias
     idx1, idx2 = random.sample(range(len(cromossoma)), 2)
-    cromossoma[idx1], cromossoma[idx2] = cromossoma[idx2], cromossoma[idx1]
-    return cromossoma
 
+    # Seleciona uma posição aleatória dentro de cada tupla
+    pos1 = random.randint(0, len(cromossoma[idx1]) - 1)
+    pos2 = random.randint(0, len(cromossoma[idx2]) - 1)
 
-# Mutação Inversão - Inverte a ordem dos enfermeiros entre dois pontos
-def inversion_mutation(cromossoma):
-    idx1, idx2 = sorted(random.sample(range(len(cromossoma)), 2))
-    cromossoma[idx1:idx2] = reversed(cromossoma[idx1:idx2])
+    # Troca os enfermeiros selecionados
+    cromossoma[idx1][pos1], cromossoma[idx2][pos2] = cromossoma[idx2][pos2], cromossoma[idx1][pos1]
+
     return cromossoma
 
 
